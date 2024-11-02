@@ -1,0 +1,35 @@
+services:
+  go-oauth2-server:
+    container_name: oauth2-server
+    build:
+      context: ./go-oauth2-server
+      dockerfile: Dockerfile
+    environment:
+      JWT_SECRET: "your_secure_secret_key"
+      PORT: "8080"
+    ports:
+      - "8080:8080"
+    networks:
+      - oauth-net
+  
+  oidc-client:
+    container_name: oauth2-client
+    build:
+      context: ./go-oidc-client
+      dockerfile: Dockerfile
+    depends_on:
+      - go-oauth2-server
+    ports:
+      - "8081:8080"  # Expose the client's port on a different host port
+    environment:
+      - CLIENT_ID=client_id
+      - CLIENT_SECRET=client_secret
+      - REDIRECT_URI=http://localhost:8081/callback
+      - AUTH_ENDPOINT=http://auth-server:8080/auth
+      - TOKEN_ENDPOINT=http://auth-server:8080/token
+    networks:
+      - oauth-net
+  
+networks:
+ oauth-net:
+    driver: bridge
