@@ -92,8 +92,8 @@ func main() {
 	r.HandleFunc("/request-credential", RequestCredentialHandler).Methods("POST") // New endpoint for requesting credentials
 	r.HandleFunc("/token", tokenHandler).Methods("POST")
 
-	log.Println("Starting server on :9090")
-	log.Fatal(http.ListenAndServe(":9090", r))
+	log.Println("Starting server on :8080")
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
 // Authorization handler for the /authorize endpoint
