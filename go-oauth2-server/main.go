@@ -44,21 +44,6 @@ func generateUUID() string {
 	return newUUID.String()
 }
 
-func generateRandomKey(length int) (string, error) {
-	// Create a byte slice of the desired length
-	key := make([]byte, length)
-
-	// Fill the byte slice with secure random bytes
-	_, err := rand.Read(key)
-	if err != nil {
-		return "", err
-	}
-
-	// Encode the byte slice to a base64 string for easier usage
-	encodedKey := base64.RawURLEncoding.EncodeToString(key)
-	return encodedKey, nil
-}
-
 // GenerateAuthCode generates a secure random authorization code
 func GenerateAuthCode(clientID string, userID string, redirectURI string) (*AuthCode, error) {
 	// Generate a random 32-byte slice
