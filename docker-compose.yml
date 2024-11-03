@@ -1,4 +1,17 @@
 services:
+  postgres-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: oidc_user
+      POSTGRES_PASSWORD: oidc_password
+      POSTGRES_DB: oidc_db
+    ports:
+      - "5432:5432"
+    networks:
+      - oauth-network
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+  
   go-oauth2-server:
     container_name: oauth2-server
     build:
@@ -10,7 +23,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - oauth-net
+      - oauth-network
   
   oidc-client:
     container_name: oauth2-client
@@ -28,8 +41,24 @@ services:
       - AUTH_ENDPOINT=http://auth-server:8080/auth
       - TOKEN_ENDPOINT=http://auth-server:8080/token
     networks:
-      - oauth-net
+      - oauth-network
+
+  user-service:
+    build:
+      context: ./user-service
+    ports:
+      - "8082:8082"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: oidc_user
+      DB_PASSWORD: oidc_password
+      DB_NAME: oidc_db
+    networks:
+      - oauth-network
+    depends_on:
+      - postgres-db
   
 networks:
- oauth-net:
+ oauth-network:
     driver: bridge
