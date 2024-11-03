@@ -74,7 +74,7 @@ func main() {
 	r.HandleFunc("/authorize", authorizeHandler).Methods("GET")
 	r.HandleFunc("/callback", handleCallback).Methods("GET")
 	r.HandleFunc("/login", loginHandler).Methods("POST")
-	r.HandleFunc("/request-credential", RequestCredentialHandler).Methods("POST") // New endpoint for requesting credentials
+	r.HandleFunc("/credential", RequestCredentialHandler).Methods("POST") // New endpoint for requesting credentials
 	r.HandleFunc("/token", tokenHandler).Methods("POST")
 
 	log.Println("Starting server on :8080")
